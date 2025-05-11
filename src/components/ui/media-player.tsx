@@ -284,9 +284,10 @@ function useStoreContext(name: keyof typeof MEDIA_PLAYER_ERRORS) {
 function useStore<T>(selector: (state: StoreState) => T): T {
   const store = useStoreContext(ROOT_NAME)
 
-  const lastValueRef = useLazyRef<{ value: T; state: StoreState } | null>(
-    () => null
-  )
+  const lastValueRef = useLazyRef<{ value: T; state: StoreState }>(() => ({
+    value: selector(store.getState()),
+    state: store.getState(),
+  }))
 
   const getSnapshot = React.useCallback(() => {
     const state = store.getState()
@@ -297,9 +298,14 @@ function useStore<T>(selector: (state: StoreState) => T): T {
     }
 
     const nextValue = selector(state)
-    lastValueRef.current = { value: nextValue, state }
+    if (lastValueRef.current) {
+      lastValueRef.current.value = nextValue
+      lastValueRef.current.state = state
+      lastValueRef.current.value = nextValue
+      lastValueRef.current.state = state
+    }
     return nextValue
-  }, [store, selector, lastValueRef])
+  }, [store, selector])
 
   return React.useSyncExternalStore(store.subscribe, getSnapshot, getSnapshot)
 }
@@ -372,7 +378,7 @@ const MediaPlayerRoot = React.forwardRef<HTMLDivElement, MediaPlayerRootProps>(
 
     const dir = useDirection(dirProp)
     const propsRef = useAsRef(props)
-    const listeners = useLazyRef(() => new Set<() => void>()).current
+    const listeners = useLazyRef(() => new Set<() => void>()).current!
 
     const mediaRef = React.useRef<HTMLVideoElement | HTMLAudioElement>(null)
     const previousVolumeRef = React.useRef(defaultVolume)
