@@ -1,4 +1,11 @@
-export const apartmentData: any = [
+export interface Apartment {
+  title: string
+  type: string
+  area: string
+  image: string
+}
+
+export const apartmentData: Apartment[] = [
   {
     title: 'Căn hộ 1A',
     type: 'Căn hộ cao cấp',

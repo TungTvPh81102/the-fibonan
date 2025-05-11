@@ -21,10 +21,27 @@ import {
 } from '@/components/ui/dialog'
 import { apartmentData } from '@/data/apartment-data'
 
-const ApartmentSection = () => {
-  const [selectedApartment, setSelectedApartment] = useState(null)
+// Define interfaces for proper typing
+interface Apartment {
+  title: string
+  type: string
+  area: string
+  image: string
+}
 
-  const getApartmentDetails = (apartment: any) => {
+interface ApartmentDetails extends Apartment {
+  price: string
+  bedrooms: number
+  bathrooms: number
+  description: string
+  features: string[]
+}
+
+const ApartmentSection = () => {
+  const [selectedApartment, setSelectedApartment] =
+    useState<ApartmentDetails | null>(null)
+
+  const getApartmentDetails = (apartment: Apartment): ApartmentDetails => {
     return {
       ...apartment,
       price:
@@ -76,7 +93,7 @@ const ApartmentSection = () => {
     }
   }
 
-  const handleOpenDialog = (apartment: any) => {
+  const handleOpenDialog = (apartment: Apartment) => {
     setSelectedApartment(getApartmentDetails(apartment))
   }
 
@@ -99,7 +116,7 @@ const ApartmentSection = () => {
 
         <Carousel className="w-full">
           <CarouselContent>
-            {apartmentData.map((apartment: any, index: any) => (
+            {apartmentData.map((apartment: Apartment, index: number) => (
               <CarouselItem
                 key={index}
                 className="p-2 md:basis-1/2 lg:basis-1/3"

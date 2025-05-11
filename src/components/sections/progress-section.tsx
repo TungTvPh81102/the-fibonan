@@ -45,12 +45,12 @@ const projectImages = [
 ]
 
 const ProgressSection = () => {
-  const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedImage, setSelectedImage] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [touchStart, setTouchStart] = useState(0)
   const [touchEnd, setTouchEnd] = useState(0)
 
-  const openLightbox = useCallback((index) => {
+  const openLightbox = useCallback((index: number) => {
     setIsLoading(true)
     setSelectedImage(index)
     document.body.style.overflow = 'hidden'
@@ -69,28 +69,28 @@ const ProgressSection = () => {
   }, [])
 
   const navigateImage = useCallback(
-    (direction) => {
+    (direction: 'prev' | 'next') => {
       if (selectedImage === null) return
       setIsLoading(true)
 
       if (direction === 'prev') {
-        setSelectedImage(
-          selectedImage === 0 ? projectImages.length - 1 : selectedImage - 1
+        setSelectedImage((prev) =>
+          prev === null || prev === 0 ? projectImages.length - 1 : prev - 1
         )
       } else {
-        setSelectedImage(
-          selectedImage === projectImages.length - 1 ? 0 : selectedImage + 1
+        setSelectedImage((prev) =>
+          prev === null || prev === projectImages.length - 1 ? 0 : prev + 1
         )
       }
     },
     [selectedImage]
   )
 
-  const handleTouchStart = (e) => {
+  const handleTouchStart = (e: any) => {
     setTouchStart(e.targetTouches[0].clientX)
   }
 
-  const handleTouchMove = (e) => {
+  const handleTouchMove = (e: any) => {
     setTouchEnd(e.targetTouches[0].clientX)
   }
 
@@ -105,7 +105,7 @@ const ProgressSection = () => {
   }
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: any) => {
       if (selectedImage === null) return
 
       if (e.key === 'Escape') closeLightbox()
@@ -117,7 +117,7 @@ const ProgressSection = () => {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [selectedImage, closeLightbox, navigateImage])
 
-  const ImageThumbnail = ({ src, alt, index, caption }) => (
+  const ImageThumbnail = ({ src, alt, index, caption }: any) => (
     <div
       className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg transition-all duration-300 hover:shadow-lg"
       onClick={() => openLightbox(index)}
