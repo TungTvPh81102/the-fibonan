@@ -3,44 +3,104 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Badge } from '@/components/ui/badge'
 import Image from 'next/image'
-import { ChevronLeft, ChevronRight, X, Info } from 'lucide-react'
+import { ChevronLeft, ChevronRight, X, Info, ChevronDown } from 'lucide-react'
 
 const projectImages = [
   {
     id: 1,
-    src: 'https://res.cloudinary.com/dvrexlsgx/image/upload/v1746507114/courses/thumbnail/zwBJU1qgoX.jpg',
-    alt: 'Hình ảnh dự án 1',
-    caption: 'Mặt tiền Green Residence',
+    src: '/images/mb-ch/1pn/1.jpg',
+    alt: 'Hình ảnh căn hộ 1PN',
+    caption: 'Mặt bằng căn hộ 1PN',
   },
   {
     id: 2,
-    src: 'https://res.cloudinary.com/dvrexlsgx/image/upload/v1746493174/courses/thumbnail/nYiMGmx6mf.jpg',
-    alt: 'Hình ảnh dự án 2',
-    caption: 'Không gian cảnh quan xanh',
+    src: '/images/mb-ch/2pn/1.jpg',
+    alt: 'Hình ảnh căn hộ 2PN',
+    caption: 'Mặt bằng căn hộ 2PN',
   },
   {
     id: 3,
-    src: 'https://res.cloudinary.com/dvrexlsgx/image/upload/v1746491921/courses/thumbnail/ORRjA0zxSY.jpg',
-    alt: 'Hình ảnh dự án 3',
-    caption: 'Tiến độ xây dựng tháng 4/2025',
+    src: '/images/mb-ch/2pn/2.jpg',
+    alt: 'Hình ảnh căn hộ 2PN',
+    caption: 'Mặt bằng căn hộ 2PN',
   },
   {
     id: 4,
-    src: 'https://res.cloudinary.com/dvrexlsgx/image/upload/v1746491720/courses/thumbnail/Sr1EtTAeXh.jpg',
-    alt: 'Hình ảnh dự án 4',
-    caption: 'Khu vực hồ bơi',
+    src: '/images/mb-ch/2pn/3.jpg',
+    alt: 'Hình ảnh căn hộ 2PN',
+    caption: 'Mặt bằng căn hộ 2PN',
   },
   {
     id: 5,
-    src: 'https://res.cloudinary.com/dvrexlsgx/image/upload/v1746479786/courses/thumbnail/J9QgqbfWav.jpg',
-    alt: 'Hình ảnh dự án 5',
-    caption: 'Công viên nội khu',
+    src: '/images/mb-ch/2pn/4.jpg',
+    alt: 'Hình ảnh căn hộ 2PN',
+    caption: 'Mặt bằng căn hộ 2PN',
   },
   {
     id: 6,
-    src: 'https://res.cloudinary.com/dvrexlsgx/image/upload/v1746479436/courses/thumbnail/m582Om2ZDj.jpg',
-    alt: 'Hình ảnh dự án 6',
-    caption: 'Toàn cảnh dự án từ trên cao',
+    src: '/images/mb-ch/2pn/5.jpg',
+    alt: 'Hình ảnh căn hộ 2PN',
+    caption: 'Mặt bằng căn hộ 2PN',
+  },
+  {
+    id: 7,
+    src: '/images/mb-ch/2pn/6.jpg',
+    alt: 'Hình ảnh căn hộ 2PN',
+    caption: 'Mặt bằng căn hộ 2PN',
+  },
+  {
+    id: 8,
+    src: '/images/mb-ch/2pn/7.jpg',
+    alt: 'Hình ảnh căn hộ 2PN',
+    caption: 'Mặt bằng căn hộ 2PN',
+  },
+  {
+    id: 9,
+    src: '/images/mb-ch/3pn/1.jpg',
+    alt: 'Hình ảnh căn hộ 3PN',
+    caption: 'Mặt bằng căn hộ 3PN',
+  },
+  {
+    id: 10,
+    src: '/images/mb-ch/3pn/2.jpg',
+    alt: 'Hình ảnh căn hộ 3PN',
+    caption: 'Mặt bằng căn hộ 3PN',
+  },
+  {
+    id: 11,
+    src: '/images/mb-ch/3pn/3.jpg',
+    alt: 'Hình ảnh căn hộ 3PN',
+    caption: 'Mặt bằng căn hộ 3PN',
+  },
+  {
+    id: 12,
+    src: '/images/mb-ch/3pn/4.jpg',
+    alt: 'Hình ảnh căn hộ 3PN',
+    caption: 'Mặt bằng căn hộ 3PN',
+  },
+  {
+    id: 13,
+    src: '/images/mb-ch/3pn/5.jpg',
+    alt: 'Hình ảnh căn hộ 3PN',
+    caption: 'Mặt bằng căn hộ 3PN',
+  },
+  {
+    id: 14,
+    src: '/images/mb-ch/3pn/6.jpg',
+    alt: 'Hình ảnh căn hộ 3PN',
+    caption: 'Mặt bằng căn hộ 3PN',
+  },
+  {
+    id: 15,
+    src: '/images/mb-ch/3pn/7.jpg',
+    alt: 'Hình ảnh căn hộ 3PN',
+    caption: 'Mặt bằng căn hộ 3PN',
+  },
+  {
+    id: 16,
+    src: '/images/mb-ch/3pn/8.jpg',
+    alt: 'Hình ảnh căn hộ 3PN',
+    caption: 'Mặt bằng căn hộ 3PN',
   },
 ]
 
@@ -49,6 +109,8 @@ const ProgressSection = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [touchStart, setTouchStart] = useState(0)
   const [touchEnd, setTouchEnd] = useState(0)
+  const [visibleImages, setVisibleImages] = useState(4)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
 
   const openLightbox = useCallback((index: number) => {
     setIsLoading(true)
@@ -104,6 +166,14 @@ const ProgressSection = () => {
     }
   }
 
+  const loadMoreImages = () => {
+    setIsLoadingMore(true)
+    setTimeout(() => {
+      setVisibleImages(projectImages.length)
+      setIsLoadingMore(false)
+    }, 500)
+  }
+
   useEffect(() => {
     const handleKeyDown = (e: any) => {
       if (selectedImage === null) return
@@ -123,11 +193,11 @@ const ProgressSection = () => {
       onClick={() => openLightbox(index)}
     >
       <Image
-        src={src || '/placeholder.svg'}
+        src={src}
         alt={alt}
         fill
         sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        className="transition-transform duration-500 group-hover:scale-105"
       />
       <div className="absolute inset-0 bg-black/0 transition-all duration-300 group-hover:bg-black/20"></div>
       {caption && (
@@ -149,19 +219,20 @@ const ProgressSection = () => {
       <div className="container max-w-7xl px-4 md:px-6">
         <div className="mb-12 flex flex-col items-center">
           <Badge className="mb-4 bg-emerald-100 text-emerald-700 hover:bg-emerald-200">
-            Tiến độ
+            Mặt bằng
           </Badge>
           <h2 className="text-center text-3xl font-bold md:text-4xl">
-            Tiến độ <span className="text-emerald-600">dự án</span>
+            Mặt bằng <span className="text-emerald-600">căn hộ</span>
           </h2>
           <div className="mt-6 h-1 w-20 bg-emerald-500"></div>
           <p className="mt-6 max-w-3xl text-center text-gray-700">
-            Cập nhật tiến độ xây dựng mới nhất của dự án Green Residence
+            Thiết kế căn hộ thông minh - Tối ưu công năng - Tầm nhìn không giới
+            hạn
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 md:gap-6">
-          {projectImages.map((image, index) => (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
+          {projectImages.slice(0, visibleImages).map((image, index) => (
             <ImageThumbnail
               key={image.id}
               src={image.src}
@@ -171,6 +242,28 @@ const ProgressSection = () => {
             />
           ))}
         </div>
+
+        {visibleImages < projectImages.length && (
+          <div className="mt-8 flex justify-center">
+            <button
+              onClick={loadMoreImages}
+              disabled={isLoadingMore}
+              className="flex items-center gap-2 rounded-full bg-emerald-600 px-6 py-2 text-white transition-all duration-300 hover:bg-emerald-700 disabled:opacity-50"
+            >
+              {isLoadingMore ? (
+                <>
+                  <div className="size-5 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                  <span>Đang tải...</span>
+                </>
+              ) : (
+                <>
+                  <span>Xem thêm</span>
+                  <ChevronDown className="size-5" />
+                </>
+              )}
+            </button>
+          </div>
+        )}
 
         {selectedImage !== null && (
           <div
@@ -211,7 +304,6 @@ const ProgressSection = () => {
                 </div>
               </div>
 
-              {/* Image thumbnails for quick navigation */}
               <div className="mt-4 hidden items-center justify-center gap-2 overflow-x-auto pb-2 md:flex">
                 {projectImages.map((image, index) => (
                   <div

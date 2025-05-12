@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { CheckCircle2 } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import {
@@ -10,8 +10,58 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import { useForm } from 'react-hook-form'
+import { CtaPayload, ctaSchema } from '@/validations/cta'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import axios from 'axios'
 
 const CtaSection = () => {
+  const [loading, setLoading] = useState(false)
+
+  const form = useForm<CtaPayload>({
+    resolver: zodResolver(ctaSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      phone: '',
+      apartment: '',
+      message: '',
+    },
+  })
+
+  const onSubmit = async (data: CtaPayload) => {
+    setLoading(true)
+    try {
+      const res = await axios.post(
+        'https://script.google.com/macros/s/AKfycbw-W9rElyQv0ksV2yxvazvg3dMAC_X15H2GLu956rAtrESBrRDnPuDUB649RP-04ND9/exec',
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      console.log(res)
+
+      alert('Gửi thành công!')
+      form.reset()
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Đã có lỗi xảy ra.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-emerald-800 to-emerald-600 py-16 text-white md:py-10">
       <div className="absolute left-0 top-0 size-full overflow-hidden opacity-20">
@@ -28,7 +78,7 @@ const CtaSection = () => {
             </h2>
             <p className="text-white/80">
               Đăng ký ngay hôm nay để nhận thông tin chi tiết về dự án và các
-              chương trình ưu đãi đặc biệt từ Green Residence.
+              chương trình ưu đãi đặc biệt từ THE FIBONAN.
             </p>
             <ul className="space-y-3">
               {[
@@ -45,41 +95,127 @@ const CtaSection = () => {
             </ul>
           </div>
           <div className="rounded-xl border border-white/20 bg-white/10 p-6 backdrop-blur-sm">
-            <form className="space-y-4">
-              <Input
-                type="text"
-                placeholder="Họ và tên"
-                className="border-white/30 bg-white/20 placeholder:text-white/70"
-              />
-              <Input
-                type="email"
-                placeholder="Email"
-                className="border-white/30 bg-white/20 placeholder:text-white/70"
-              />
-              <Input
-                type="tel"
-                placeholder="Số điện thoại"
-                className="border-white/30 bg-white/20 placeholder:text-white/70"
-              />
-              <Select>
-                <SelectTrigger className="border-white/30 bg-white/20 text-white">
-                  <SelectValue placeholder="Bạn quan tâm đến căn hộ nào?" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1pn">Căn hộ 1 phòng ngủ</SelectItem>
-                  <SelectItem value="2pn">Căn hộ 2 phòng ngủ</SelectItem>
-                  <SelectItem value="3pn">Căn hộ 3 phòng ngủ</SelectItem>
-                  <SelectItem value="penthouse">Penthouse</SelectItem>
-                </SelectContent>
-              </Select>
-              <Textarea
-                placeholder="Nội dung yêu cầu"
-                className="min-h-[100px] border-white/30 bg-white/20 placeholder:text-white/70"
-              />
-              <Button className="w-full bg-white text-emerald-700 hover:bg-white/90">
-                Đăng ký ngay
-              </Button>
-            </form>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-4 text-white"
+              >
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Họ và tên</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Họ và tên"
+                          {...field}
+                          className="border-white/30 bg-white/20 text-white placeholder:text-white/70"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="Email"
+                          {...field}
+                          className="border-white/30 bg-white/20 text-white placeholder:text-white/70"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Số điện thoại</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder="Số điện thoại"
+                          {...field}
+                          className="border-white/30 bg-white/20 text-white placeholder:text-white/70"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="apartment"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Loại căn hộ</FormLabel>
+                      <FormControl>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger className="border-white/30 bg-white/20 text-white">
+                            <SelectValue placeholder="Bạn quan tâm đến căn hộ nào?" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1pn">
+                              Căn hộ 1 phòng ngủ
+                            </SelectItem>
+                            <SelectItem value="2pn">
+                              Căn hộ 2 phòng ngủ
+                            </SelectItem>
+                            <SelectItem value="3pn">
+                              Căn hộ 3 phòng ngủ
+                            </SelectItem>
+                            <SelectItem value="penthouse">Penthouse</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Nội dung yêu cầu</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Nội dung yêu cầu"
+                          className="min-h-[100px] border-white/30 bg-white/20 text-white placeholder:text-white/70"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <Button
+                  type="submit"
+                  className="w-full bg-white text-emerald-700 hover:bg-white/90"
+                  disabled={loading}
+                >
+                  {loading ? 'Đang gửi...' : 'Đăng ký ngay'}
+                </Button>
+              </form>
+            </Form>
           </div>
         </div>
       </div>
